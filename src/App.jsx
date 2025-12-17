@@ -89,7 +89,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Plainly Videos - Generador de Renders</h1>
+      <h1>Plainly Videos</h1>
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">
