@@ -6,6 +6,10 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [response, setResponse] = useState(null)
   const [error, setError] = useState(null)
+  const [renderId, setRenderId] = useState(null)
+  const [renderState, setRenderState] = useState(null)
+  const [videoUrl, setVideoUrl] = useState(null)
+  const [checkingStatus, setCheckingStatus] = useState(false)
   
   const [parameters, setParameters] = useState({
     editAfluencia: '90%',
@@ -24,6 +28,45 @@ function App() {
     }))
   }
 
+  const checkRenderStatus = async (id) => {
+    setCheckingStatus(true)
+    
+    try {
+      const res = await fetch(`http://localhost:3002/api/renders/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey
+        }
+      })
+
+      const data = await res.json()
+      
+      if (res.ok) {
+        setRenderState(data.state)
+        
+        if (data.state === 'DONE' && data.output) {
+          setVideoUrl(data.output)
+          setCheckingStatus(false)
+        } else if (data.state === 'PENDING' || data.state === 'IN_PROGRESS' || data.state === 'RENDERING') {
+          // Volver a verificar después de 5 segundos
+          setTimeout(() => checkRenderStatus(id), 5000)
+        } else if (data.state === 'FAILED') {
+          setError('El render falló: ' + (data.error || 'Error desconocido'))
+          setCheckingStatus(false)
+        } else {
+          setCheckingStatus(false)
+        }
+      } else {
+        setError('Error al verificar el estado del render')
+        setCheckingStatus(false)
+      }
+    } catch (err) {
+      setError('Error al verificar el estado: ' + err.message)
+      setCheckingStatus(false)
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -35,6 +78,8 @@ function App() {
     setLoading(true)
     setError(null)
     setResponse(null)
+    setVideoUrl(null)
+    setRenderState(null)
 
     const payload = {
       projectId: "b7f99e5e-94d2-4cc4-a02d-8d9661edc2e4",
@@ -64,19 +109,38 @@ function App() {
     }
 
     try {
-      const res = await fetch('https://api.plainlyvideos.com/api/v2/renders', {
+      const res = await fetch('http://localhost:3002/api/renders', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + btoa(apiKey + ':')
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          apiKey: apiKey,
+          payload: payload
+        })
       })
 
       const data = await res.json()
       
       if (res.ok) {
         setResponse(data)
+        
+        // Guardar el ID del render
+        if (data.id) {
+          setRenderId(data.id)
+        }
+        
+        // Guardar el estado inicial
+        if (data.state) {
+          setRenderState(data.state)
+          
+          // Si está PENDING, comenzar a verificar el estado
+          if (data.state === 'PENDING' || data.state === 'RENDERING') {
+            checkRenderStatus(data.id)
+          } else if (data.state === 'DONE' && data.output) {
+            setVideoUrl(data.output)
+          }
+        }
       } else {
         setError(data.message || 'Error al crear el render')
       }
@@ -187,7 +251,29 @@ function App() {
       {response && (
         <div className="success">
           <h3>✓ Render Creado Exitosamente</h3>
-          <pre>{JSON.stringify(response, null, 2)}</pre>
+          {renderId && (
+            <p><strong>ID del Render:</strong> {renderId}</p>
+          )}
+          {renderState && (
+            <p><strong>Estado:</strong> <span className={`state ${renderState.toLowerCase()}`}>{renderState}</span></p>
+          )}
+          {checkingStatus && (
+            <p className="checking">⏳ Verificando estado del render...</p>
+          )}
+        </div>
+      )}
+
+      {videoUrl && (
+        <div className="video-container">
+          <h3>🎬 Video Listo!</h3>
+          <p><strong>URL del video:</strong></p>
+          <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="video-link">
+            {videoUrl}
+          </a>
+          <video controls width="100%" style={{ marginTop: '1rem', borderRadius: '8px' }}>
+            <source src={videoUrl} type="video/mp4" />
+            Tu navegador no soporta el elemento de video.
+          </video>
         </div>
       )}
     </div>

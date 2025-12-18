@@ -120,3 +120,82 @@ button:disabled {
   font-size: 0.9rem;
   line-height: 1.5;
 }
+
+.success p {
+  margin: 0.5rem 0;
+  color: #aaffaa;
+}
+
+.state {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.state.pending {
+  background: rgba(255, 165, 0, 0.3);
+  color: #ffaa44;
+}
+
+.state.rendering {
+  background: rgba(0, 150, 255, 0.3);
+  color: #44aaff;
+}
+
+.state.done {
+  background: rgba(0, 255, 0, 0.3);
+  color: #44ff44;
+}
+
+.state.failed {
+  background: rgba(255, 0, 0, 0.3);
+  color: #ff4444;
+}
+
+.checking {
+  color: #ffaa44;
+  font-style: italic;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.video-container {
+  background: rgba(0, 150, 255, 0.1);
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.video-container h3 {
+  color: #44aaff;
+  margin-top: 0;
+}
+
+.video-container p {
+  color: #aaccff;
+  margin: 0.5rem 0;
+}
+
+.video-link {
+  display: block;
+  color: #44aaff;
+  word-break: break-all;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.video-link:hover {
+  background: rgba(0, 0, 0, 0.5);
+  text-decoration: underline;
+}
