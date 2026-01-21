@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/plainlyAuto/static/css/main.04e8eb7a.css",
-    "main.js": "/plainlyAuto/static/js/main.ac6e2740.js",
+    "main.css": "/plainlyAuto/static/css/main.cd816402.css",
+    "main.js": "/plainlyAuto/static/js/main.9b6e912f.js",
     "static/js/453.2c29feb8.chunk.js": "/plainlyAuto/static/js/453.2c29feb8.chunk.js",
     "index.html": "/plainlyAuto/index.html",
-    "main.04e8eb7a.css.map": "/plainlyAuto/static/css/main.04e8eb7a.css.map",
-    "main.ac6e2740.js.map": "/plainlyAuto/static/js/main.ac6e2740.js.map",
+    "main.cd816402.css.map": "/plainlyAuto/static/css/main.cd816402.css.map",
+    "main.9b6e912f.js.map": "/plainlyAuto/static/js/main.9b6e912f.js.map",
     "453.2c29feb8.chunk.js.map": "/plainlyAuto/static/js/453.2c29feb8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.04e8eb7a.css",
-    "static/js/main.ac6e2740.js"
+    "static/css/main.cd816402.css",
+    "static/js/main.9b6e912f.js"
   ]
 }
